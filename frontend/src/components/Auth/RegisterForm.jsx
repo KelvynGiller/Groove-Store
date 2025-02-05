@@ -18,7 +18,9 @@ const RegisterForm = () => {
   };
 
   const handleSubmit = async (e) => {
+
     e.preventDefault();
+    //add validations later
 
     loginWithRedirect({
       screen_hint: 'signup',
