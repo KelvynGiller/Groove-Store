@@ -9,10 +9,14 @@ const cartRoutes = require('./routes/cartRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const swaggerDocs = require('./config/swaggerConfig');
 const { authMiddleware } = require('./controllers/authController')
+const cors = require("cors");
 
 dotenv.config();
 
 const app = express();
+
+//Cors Middleware
+app.use(cors());
 
 //Auth Middleware
 
