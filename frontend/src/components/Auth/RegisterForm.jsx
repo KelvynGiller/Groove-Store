@@ -1,69 +1,22 @@
-import React, { useState } from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
+import React, { useState } from "react";
+import { register } from "../../services/authService";
 
 const RegisterForm = () => {
-  const { loginWithRedirect } = useAuth0();
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-  });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const handleSubmit = async (e) => {
-
-    e.preventDefault();
-    //add validations later
-
-    loginWithRedirect({
-      screen_hint: 'signup',
-    });
+  const handleRegister = async () => {
+    const user = await register(email, password);
+    if (user) alert("Conta criada com sucesso!");
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="name">Name:</label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div>
-        <label htmlFor="email">E-mail:</label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div>
-        <label htmlFor="password">Password:</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <button type="submit">Register</button>
-    </form>
+    <div>
+      <h2>Registro</h2>
+      <input type="email" placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
+      <input type="password" placeholder="Senha" onChange={(e) => setPassword(e.target.value)} />
+      <button onClick={handleRegister}>Registrar</button>
+    </div>
   );
 };
 

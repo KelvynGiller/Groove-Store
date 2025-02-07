@@ -7,6 +7,7 @@ import ProductListPage from './pages/ProductListPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
+import Dashboard from './pages/DashboardPage';
 
 const AppRoutes = () => {
     return (
@@ -15,6 +16,7 @@ const AppRoutes = () => {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/products" element={<ProductListPage />} />
                 <Route path="/product/:id" element={<ProductDetailPage />} />
                 <Route path="/cart" element={<CartPage />} />
