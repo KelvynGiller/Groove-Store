@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { login } from "../../services/authService";
 import { useNavigate } from "react-router-dom";
+import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -8,15 +8,27 @@ const LoginForm = () => {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
+    const auth = getAuth();
     try {
-      const user = await login(email, password);
-      if (user) {
-        alert("Login realizado com sucesso!");
-        navigate("/dashboard");
-      }
+      await signInWithEmailAndPassword(auth, email, password);
+      alert("Login successful!");
+      navigate("/dashboard");
     } catch (error) {
-      alert("Erro ao fazer login. Verifique suas credenciais.");
-      console.error("Erro no login:", error);
+      alert("Error during login. Please check your credentials.");
+      console.error("Login error:", error);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    const auth = getAuth();
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+      alert("Google login successful!");
+      navigate("/dashboard");
+    } catch (error) {
+      alert("Error during Google login.");
+      console.error("Google login error:", error);
     }
   };
 
@@ -31,11 +43,15 @@ const LoginForm = () => {
       />
       <input
         type="password"
-        placeholder="Senha"
+        placeholder="Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <button onClick={handleLogin}>Entrar</button>
+      <button onClick={handleLogin}>Log In</button>
+      
+      <div>
+        <button onClick={handleGoogleLogin}>Log In with Google</button>
+      </div>
     </div>
   );
 };
