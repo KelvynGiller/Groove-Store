@@ -1,13 +1,14 @@
 import React from 'react';
 import RegisterForm from '../components/Auth/RegisterForm';
-import LoginLink from '../components/Auth/LoginLink';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 const RegisterPage = () => {
   return (
-    <div className="register-page">
-      <h1>Create your account</h1>
+    <div>
+      <Header />
       <RegisterForm />
-      <LoginLink />
+      <Footer />
     </div>
   );
 };
