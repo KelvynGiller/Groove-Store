@@ -1,15 +1,21 @@
-import React from 'react';
-import Cart from '../components/Cart';
+import React from "react";
+import Header from "../components/Header";
+import Cart from "../components/Cart";
+import Footer from "../components/Footer";
+import { useCart } from "../context/CartContext";
 
 const CartPage = () => {
-    const cartItems = [];
+  const { cart } = useCart();
 
-    return (
-        <div>
-            <h1>Your Cart</h1>
-            <Cart cartItems={cartItems}/>
-        </div>
-    );
+  return (
+    <div>
+      <Header />
+      <div className="flex items-center justify-center min-h-screen bg-[#16161A]">
+        <Cart cartItems={cart} />
+      </div>
+      <Footer />
+    </div>
+  );
 };
 
 export default CartPage;
