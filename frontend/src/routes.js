@@ -8,9 +8,11 @@ import ProductDetailPage from './pages/ProductDetailPage';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import Dashboard from './pages/DashboardPage';
+import { CartProvider } from "./context/CartContext";
 
 const AppRoutes = () => {
     return (
+      <CartProvider>  
         <Router>
             <Routes>
                 <Route path="/" element={<HomePage />} />
@@ -23,6 +25,7 @@ const AppRoutes = () => {
                 <Route path="/checkout" element={<CheckoutPage />} />
             </Routes>
         </Router>
+      </CartProvider>
     )
 }
 

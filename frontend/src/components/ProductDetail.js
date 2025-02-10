@@ -1,6 +1,8 @@
 import React from "react";
+import { useCart } from "../context/CartContext"; 
 
 const ProductDetail = ({ product }) => {
+  const { addToCart } = useCart();
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#16161A]">
       <div className="bg-[#242629] p-8 rounded-2xl shadow-lg w-[400px] text-center">
@@ -9,7 +11,10 @@ const ProductDetail = ({ product }) => {
         <p className="text-[#7F5AF0] text-xl font-semibold mb-6">
           ${product.price}
         </p>
-        <button className="w-full bg-[#7F5AF0] text-white p-3 rounded-md hover:bg-[#6A47D5] transition">
+        <button
+          onClick={() => addToCart(product)} 
+          className="w-full bg-[#7F5AF0] text-white p-3 rounded-md hover:bg-[#6A47D5] transition"
+        >
           Add to Cart
         </button>
       </div>

@@ -31,11 +31,20 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div>
+    <div className="min-h-screen flex flex-col bg-[#16161A] text-white">
       <Header />
-      <h1>{user ? `Hello, ${user.displayName || user.email}` : "Loading..."}</h1>
-      <p>{message}</p>
-      <Link to="/products">Browse musics</Link>
+      <div className="flex-grow flex flex-col items-center justify-center text-center px-6">
+        <h1 className="text-3xl font-bold mb-4">
+          {user ? `Hello, ${user.displayName || user.email}` : "Loading..."}
+        </h1>
+        <p className="text-gray-400 mb-6">{message}</p>
+        <Link
+          to="/products"
+          className="bg-[#7F5AF0] text-white px-6 py-3 rounded-lg hover:bg-[#6A47D5] transition"
+        >
+          Browse Musics
+        </Link>
+      </div>
       <Footer />
     </div>
   );
