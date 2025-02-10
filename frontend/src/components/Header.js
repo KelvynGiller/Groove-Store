@@ -6,32 +6,54 @@ const Header = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const auth = getAuth(); 
-    const unsubscribe = onAuthStateChanged(auth, setUser); 
-    return () => unsubscribe(); 
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, setUser);
+    return () => unsubscribe();
   }, []);
 
   const handleLogout = () => {
     const auth = getAuth();
-    signOut(auth); 
+    signOut(auth);
   };
 
   return (
-    <header className="header">
-      <h1>Groove Store</h1>
-      <nav>
-        <Link to="/">Home</Link>
-        <Link to="/products">Musics</Link>
-        <Link to="/cart">Cart</Link>
+    <header className="absolute w-full h-[101px] bg-black flex items-center justify-between px-8">
+      <h1 className="text-white text-[20px] font-normal leading-[24px] font-[Goldman]">
+        Groove Store
+      </h1>
+      <nav className="flex space-x-6">
+        <Link to="/" className="text-white text-[14px] font-[Golos Text]">
+          Home
+        </Link>
+        <Link to="/products" className="text-white text-[14px] font-[Golos Text]">
+          Tracks
+        </Link>
+        <Link to="/genres" className="text-white text-[14px] font-[Golos Text]">
+          Genres
+        </Link>
+        <Link to="/artists" className="text-white text-[14px] font-[Golos Text]">
+          Artists
+        </Link>
+        <Link to="/cart" className="text-white text-[14px] font-[Golos Text]">
+          Cart
+        </Link>
+      </nav>
+      <div className="flex space-x-6">
         {user ? (
-          <button onClick={handleLogout}>Logout</button>
+          <button onClick={handleLogout} className="text-white text-[18px] font-[Goldman]">
+            Logout
+          </button>
         ) : (
           <>
-            <Link to="/login">Login</Link>
-            <Link to="/register">Register</Link>
+            <Link to="/login" className="text-white text-[18px] font-[Goldman]">
+              Login
+            </Link>
+            <Link to="/register" className="text-white text-[18px] font-[Goldman]">
+              Register
+            </Link>
           </>
         )}
-      </nav>
+      </div>
     </header>
   );
 };

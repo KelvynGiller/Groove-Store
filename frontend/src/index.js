@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import App from './App';
 import { auth } from "./utils/firebase"; 
 import { onAuthStateChanged } from "firebase/auth";
+import './App.css';
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
