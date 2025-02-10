@@ -1,13 +1,14 @@
 import React from 'react';
 import LoginForm from '../components/Auth/LoginForm';
-import RegisterLink from '../components/Auth/RegisterLink';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 const LoginPage = () => {
   return (
     <div className="login-page">
-      <h1>Login to the Groove Store</h1>
+      <Header />
       <LoginForm />
-      <RegisterLink />
+      <Footer />
     </div>
   );
 };

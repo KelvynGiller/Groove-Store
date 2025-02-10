@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 const LoginForm = () => {
@@ -33,25 +33,49 @@ const LoginForm = () => {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button onClick={handleLogin}>Log In</button>
-      
-      <div>
-        <button onClick={handleGoogleLogin}>Log In with Google</button>
+    <div className="flex justify-center items-center min-h-screen bg-[#16161A]">
+      <div className="w-[400px] bg-[#242629] p-8 rounded-2xl shadow-lg text-center">
+        <h2 className="text-white font-Goldman text-2xl mb-6">Login</h2>
+
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full p-3 mb-4 bg-[#16161A] text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7F5AF0]"
+        />
+
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="w-full p-3 mb-6 bg-[#16161A] text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7F5AF0]"
+        />
+
+        <button 
+          onClick={handleLogin} 
+          className="w-full bg-[#7F5AF0] text-white py-3 rounded-lg font-bold hover:bg-[#6842c2] transition">
+          Log In
+        </button>
+
+        <div className="flex items-center my-6">
+          <div className="flex-grow border-t border-gray-500"></div>
+          <span className="mx-4 text-gray-400">OR</span>
+          <div className="flex-grow border-t border-gray-500"></div>
+        </div>
+
+        <button 
+          onClick={handleGoogleLogin} 
+          className="w-full flex items-center justify-center gap-3 bg-white text-black py-3 rounded-lg font-bold hover:bg-gray-200 transition">
+          Log In with Google
+        </button>
+
+        <p className="mt-4 text-gray-400">
+      Don't have an account? <Link className="mx-8 text-gray-200"to='/register'>Register here</Link>
+        </p>
       </div>
+
     </div>
   );
 };
