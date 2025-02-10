@@ -1,23 +1,21 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Header from '../components/Header';
-import Home from '../components/Home'
+import Home from '../components/Home';
 import Footer from '../components/Footer';
 import ProductList from "../components/ProductList";
 
 const HomePage = () => {
-    const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState([]);
 
-    useEffect(() => {
-        axios.get("http://localhost:3000/products") 
-          .then(response => setProducts(response.data))
-          .catch(error => console.error("Error fetching products:", error));
-      }, []);
-
+  useEffect(() => {
+    axios.get("http://localhost:3000/products") 
+      .then(response => setProducts(response.data))
+      .catch(error => console.error("Error fetching products:", error));
+  }, []);
 
   return (
-    
-    <div>
+    <div className="pt-[101px]">
       <Header />
       <Home />
       <ProductList products={products} />
