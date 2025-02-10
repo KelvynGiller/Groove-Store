@@ -6,7 +6,7 @@ export const register = async (email, password) => {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     return userCredential.user;
   } catch (error) {
-    console.error("Erro ao registrar:", error);
+    console.error("Register Error:", error);
     return null;
   }
 };
@@ -16,7 +16,7 @@ export const login = async (email, password) => {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     return userCredential.user;
   } catch (error) {
-    console.error("Erro ao logar:", error);
+    console.error("Login Error:", error);
     return null;
   }
 };

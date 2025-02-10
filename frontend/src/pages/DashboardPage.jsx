@@ -3,6 +3,7 @@ import { auth } from "../utils/firebase";
 import { getIdToken, onAuthStateChanged } from "firebase/auth";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { Link } from "react-router-dom";
 
 const Dashboard = () => {
   const [message, setMessage] = useState("");
@@ -22,7 +23,7 @@ const Dashboard = () => {
         setMessage(data.message);
       } else {
         setUser(null);
-        setMessage("Usuário não autenticado.");
+        setMessage("User not authorized");
       }
     });
 
@@ -32,8 +33,9 @@ const Dashboard = () => {
   return (
     <div>
       <Header />
-      <h1>{user ? `Hello, ${user.displayName || user.email}` : "Carregando..."}</h1>
+      <h1>{user ? `Hello, ${user.displayName || user.email}` : "Loading..."}</h1>
       <p>{message}</p>
+      <Link to="/products">Browse musics</Link>
       <Footer />
     </div>
   );

@@ -6,9 +6,9 @@ import { onAuthStateChanged } from "firebase/auth";
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    console.log("Usuário autenticado:", user);
+    console.log("User authenticated", user);
   } else {
-    console.log("Nenhum usuário autenticado");
+    console.log("User unauthenticated");
   }
 });
 

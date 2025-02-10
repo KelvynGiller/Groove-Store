@@ -1,57 +1,42 @@
 const express = require('express');
 const dotenv = require('dotenv');
-const passport = require('passport');
-const session = require('express-session');
+const cors = require("cors");
 const productRoutes = require('./routes/productRoutes');
 const userRoutes = require('./routes/userRoutes');
 const authRoutes = require('./routes/authRoutes');
 const cartRoutes = require('./routes/cartRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const swaggerDocs = require('./config/swaggerConfig');
-const { authMiddleware } = require('./controllers/authController')
-const cors = require("cors");
+const verifyToken = require("./firebaseAdmin");  
 
 dotenv.config();
 
 const app = express();
 
-//Cors Middleware
+// Cors Middleware
 app.use(cors());
 
-//Auth Middleware
-
-app.use(authMiddleware); 
-
-
-//JSON Middleware
+// JSON Middleware
 app.use(express.json());
 
-//Session config
-app.use(
-    session({
-        secret: process.env.SESSION_SECRET || 'secretkey',
-        resave: false,
-        saveUninitialized: false
-    })
-);
-//Passport
-require('./config/passport')(passport);
-app.use(passport.initialize());
-app.use(passport.session());
-
-//Routes
+// Rotas
 app.use('/products', productRoutes);
 app.use('/users', userRoutes);
-app.use('/auth', authRoutes)
+app.use('/auth', authRoutes); 
 app.use('/cart', cartRoutes);
 app.use('/orders', orderRoutes);
 
-//Swagger
+// Swagger
 swaggerDocs(app);
 
-//Main route
+// Rota principal
 app.get('/', (req, res) => {
-    res.send('API running');
+  res.send('API running');
+});
+
+// Rota protegida para teste
+app.get("/api/protected", verifyToken, (req, res) => {
+  res.json({ message: "Usuário autenticado!", user: req.user });
 });
 
 const PORT = process.env.PORT || 3000;

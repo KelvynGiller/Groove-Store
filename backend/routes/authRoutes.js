@@ -1,12 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const authController = require('../controllers/authController');
+const verifyToken = require('../firebaseAdmin'); 
 
-router.get('/', (req, res) => {
-    res.oidc.login();
+router.get('/profile', verifyToken, (req, res) => {
+  res.json({ message: "User profile", user: req.user });
 });
 
-router.get('/profile', authController.authMiddleware, authController.userProfile);
-router.get('/logout', authController.authMiddleware, authController.logoutUser);
+router.get('/logout', (req, res) => {
+
+  res.json({ message: "User logout" });
+});
 
 module.exports = router;
