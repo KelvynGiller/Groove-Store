@@ -9,6 +9,7 @@ import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import Dashboard from './pages/DashboardPage';
 import { CartProvider } from "./context/CartContext";
+import StripeProvider from "./services/StripeProvider";
 
 const AppRoutes = () => {
     return (
@@ -22,7 +23,9 @@ const AppRoutes = () => {
                 <Route path="/products" element={<ProductListPage />} />
                 <Route path="/product/:id" element={<ProductDetailPage />} />
                 <Route path="/cart" element={<CartPage />} />
-                <Route path="/checkout" element={<CheckoutPage />} />
+                <StripeProvider>
+                    <Route path="/checkout" element={<CheckoutPage />} />
+                </StripeProvider>
             </Routes>
         </Router>
       </CartProvider>

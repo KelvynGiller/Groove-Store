@@ -1,7 +1,7 @@
 import React from "react";
 import { useCart } from "../context/CartContext";
 
-const Checkout = () => {
+const CheckoutPage = () => {
   const { cart } = useCart();
 
   const totalPrice = cart.reduce((total, item) => total + (Number(item.price) || 0), 0);
@@ -27,4 +27,4 @@ const Checkout = () => {
   );
 };
 
-export default Checkout;
+export default CheckoutPage;
