@@ -4,11 +4,10 @@ import { useCart } from "../context/CartContext";
 const Cart = () => {
   const { cart, removeFromCart } = useCart();
 
-
   const totalPrice = cart.reduce((total, item) => total + (Number(item.price) || 0), 0);
 
   return (
-    <div className="mt-12 mb-4 bg-[#242629] p-6 rounded-2xl shadow-lg w-[400px] text-center">
+    <div className="mt-12 mb-4 bg-[#242629] p-6 rounded-2xl shadow-lg w-[1600px] text-center">
       <h2 className="text-white text-2xl font-bold mb-4">Your Cart</h2>
 
       {cart.length === 0 ? (
@@ -17,9 +16,11 @@ const Cart = () => {
         <>
           <ul className="text-white">
             {cart.map((item, index) => (
-              <li key={item.id || index} className="border-b border-gray-600 py-2 flex justify-between items-center">
-                <div>
-                  <p className="text-lg">{item.name}</p>
+              <li key={item.id || index} className="border border-gray-600 p-4 flex justify-between items-center rounded-lg bg-[#1E1E1E]">
+                <div className="flex flex-col text-left">
+                  <p className="text-lg font-bold">{item.name}</p>
+                  <p className="text-gray-400 text-sm">by {item.artist}</p>
+                  <p className="text-gray-500 text-xs">Category: {item.category}</p>
                   <p className="text-[#7F5AF0] font-semibold">${item.price}</p>
                 </div>
                 <button 

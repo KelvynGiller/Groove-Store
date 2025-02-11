@@ -8,9 +8,17 @@ export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
 
   const addToCart = (product) => {
-    setCart((prevCart) => [...prevCart, product]);
+    setCart((prevCart) => [
+      ...prevCart,
+      {
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        artist: product.artist, 
+        category: product.category,
+      },
+    ]);
   };
-
   const removeFromCart = (productId) => {
     setCart((prevCart) => prevCart.filter((item) => item.id !== productId));
   };
