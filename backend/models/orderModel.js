@@ -1,7 +1,6 @@
 const pool = require('../config/db');
 
 const Order = {
-  
   createOrder: async (cart_id, user_id, total_price) => {
     const result = await pool.query(
       'INSERT INTO orders (cart_id, user_id, total_price, status) VALUES ($1, $2, $3, $4) RETURNING *',
@@ -9,7 +8,6 @@ const Order = {
     );
     return result.rows[0];
   },
-
 
   getById: async (order_id) => {
     const result = await pool.query(
@@ -39,6 +37,14 @@ const Order = {
     const result = await pool.query(
       'DELETE FROM orders WHERE id = $1 RETURNING *',
       [order_id]
+    );
+    return result.rows[0];
+  },
+
+  createPayment: async (order_id, payment_intent_id) => {
+    const result = await pool.query(
+      'UPDATE orders SET payment_intent_id = $1, status = $2 WHERE id = $3 RETURNING *',
+      [payment_intent_id, 'paid', order_id]
     );
     return result.rows[0];
   }

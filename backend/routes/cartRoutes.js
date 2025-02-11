@@ -84,6 +84,5 @@ router.delete('/:cart_id/product', cartController.removeProductFromCart);
  *       201:
  *         description: Checkout successful
  */
-router.post('/:cart_id/checkout', orderController.checkout);
 
 module.exports = router;

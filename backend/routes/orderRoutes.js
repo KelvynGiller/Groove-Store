@@ -67,4 +67,7 @@ router.put('/:orderId/status', orderController.updateOrderStatus);
 
 router.delete('/:orderId', orderController.deleteOrder);
 
+
+router.post('/create-payment-intent', orderController.createPaymentIntent);
+
 module.exports = router;

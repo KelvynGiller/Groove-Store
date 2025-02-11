@@ -36,7 +36,7 @@ app.get('/', (req, res) => {
 
 // Rota protegida para teste
 app.get("/api/protected", verifyToken, (req, res) => {
-  res.json({ message: "Usuário autenticado!", user: req.user });
+  res.json({ message: "User authenticated", user: req.user });
 });
 
 const PORT = process.env.PORT || 3000;
