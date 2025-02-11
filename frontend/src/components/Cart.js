@@ -2,7 +2,7 @@ import React from "react";
 
 const Cart = ({ cartItems = [] }) => {
   return (
-    <div className="bg-[#242629] p-6 rounded-2xl shadow-lg w-[400px] text-center">
+    <div className="mt-12 mb-4 bg-[#242629] p-6 rounded-2xl shadow-lg w-[400px] text-center">
       <h2 className="text-white text-2xl font-bold mb-4">Your Cart</h2>
 
       {cartItems.length === 0 ? (
