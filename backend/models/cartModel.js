@@ -10,6 +10,15 @@ const Cart = {
         return result.rows[0];
     },
 
+    findByUserId: async (user_id) => {
+        const result = await pool.query(
+          'SELECT * FROM carts WHERE user_id = $1',
+          [user_id]
+        );
+        return result.rows[0];
+      },
+    
+
     findById: async (cart_id) => {
         const result = await pool.query(
             'SELECT * FROM carts WHERE id = $1',

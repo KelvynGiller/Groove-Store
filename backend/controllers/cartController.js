@@ -1,5 +1,22 @@
 const Cart = require('../models/cartModel');
 
+const createOrGetCart = async (req, res) => {
+    const { user_id } = req.body;
+  
+    try {
+
+      const existingCart = await Cart.findByUserId(user_id);
+      if (existingCart) {
+        return res.status(200).json({ cart_id: existingCart.id });
+      }
+  
+      const newCart = await Cart.createCart(user_id);
+      res.status(201).json({ cart_id: newCart.id });
+    } catch (error) {
+      res.status(500).json({ message: 'Error creating/retrieving cart', error: error.message });
+    }
+  };
+
 const createCart = async (req, res) => {
     const { user_id } = req.body;
 
@@ -98,4 +115,5 @@ module.exports = {
     getCartItems,
     updateProductQuantity,
     removeProductFromCart,
+    createOrGetCart
 };

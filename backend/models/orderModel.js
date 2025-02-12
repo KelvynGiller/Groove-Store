@@ -1,13 +1,21 @@
 const pool = require('../config/db');
 
 const Order = {
-  createOrder: async (cart_id, user_id, total_price) => {
-    const result = await pool.query(
-      'INSERT INTO orders (cart_id, user_id, total_price, status) VALUES ($1, $2, $3, $4) RETURNING *',
-      [cart_id, user_id, total_price, 'pending']
-    );
-    return result.rows[0];
-  },
+ checkCartExists: async (cart_id) => {
+  const result = await pool.query(
+    'SELECT id FROM carts WHERE id = $1',
+    [cart_id]
+  );
+  return result.rows[0];
+},
+
+createOrder: async (cart_id, user_id, total_price) => {
+  const result = await pool.query(
+    'INSERT INTO orders (cart_id, user_id, total_price) VALUES ($1, $2, $3) RETURNING *',
+    [cart_id, user_id, total_price]
+  );
+  return result.rows[0];
+},
 
   getById: async (order_id) => {
     const result = await pool.query(
