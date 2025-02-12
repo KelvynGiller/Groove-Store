@@ -10,9 +10,24 @@ const LoginForm = () => {
   const handleLogin = async () => {
     const auth = getAuth();
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      alert("Login successful!");
-      navigate("/dashboard");
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      const response = await fetch("http://localhost:3000/cart/create-or-get", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: user.uid }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+
+        localStorage.setItem("cart_id", data.cart_id);
+        alert("Login successful!");
+        navigate("/dashboard");
+      } else {
+        alert("Error creating/retrieving cart.");
+      }
     } catch (error) {
       alert("Error during login. Please check your credentials.");
       console.error("Login error:", error);
@@ -23,15 +38,28 @@ const LoginForm = () => {
     const auth = getAuth();
     const provider = new GoogleAuthProvider();
     try {
-      await signInWithPopup(auth, provider);
-      alert("Google login successful!");
-      navigate("/dashboard");
+      const userCredential = await signInWithPopup(auth, provider);
+      const user = userCredential.user;
+  
+      const response = await fetch("http://localhost:3000/cart/create-or-get", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: user.uid }),
+      });
+  
+      const data = await response.json();
+      if (response.ok) {
+        localStorage.setItem("cart_id", data.cart_id);
+        alert("Google login successful!");
+        navigate("/dashboard");
+      } else {
+        alert("Error creating/retrieving cart.");
+      }
     } catch (error) {
       alert("Error during Google login.");
       console.error("Google login error:", error);
     }
   };
-
   return (
     <div className="flex justify-center items-center min-h-screen bg-[#16161A]">
       <div className="w-[400px] bg-[#242629] p-8 rounded-2xl shadow-lg text-center">
@@ -72,10 +100,9 @@ const LoginForm = () => {
         </button>
 
         <p className="mt-4 text-gray-400">
-      Don't have an account? <Link className="text-gray-200" to='/register'>Register here</Link>
+          Don't have an account? <Link className="text-gray-200" to='/register'>Register here</Link>
         </p>
       </div>
-
     </div>
   );
 };
