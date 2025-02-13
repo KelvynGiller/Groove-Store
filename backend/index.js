@@ -13,30 +13,32 @@ dotenv.config();
 
 const app = express();
 
-// Cors Middleware
-app.use(cors());
+const corsOptions = {
+  origin: 'http://localhost:3001',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
 
-// JSON Middleware
+app.use(cors(corsOptions));
+
 app.use(express.json());
 
-// Rotas
 app.use('/products', productRoutes);
 app.use('/users', userRoutes);
 app.use('/auth', authRoutes); 
 app.use('/cart', cartRoutes);
 app.use('/orders', orderRoutes);
 
-// Swagger
+
 swaggerDocs(app);
 
-// Rota principal
 app.get('/', (req, res) => {
   res.send('API running');
 });
 
-// Rota protegida para teste
+// Test Route
 app.get("/api/protected", verifyToken, (req, res) => {
-  res.json({ message: "User authenticated", user: req.user });
+  res.json({ message: "User", user: req.user });
 });
 
 const PORT = process.env.PORT || 3000;
