@@ -5,6 +5,8 @@ import { auth } from "./utils/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import './App.css';
 import StripeProvider from "./services/StripeProvider";
+import { Provider } from 'react-redux';
+import store from './store';
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
@@ -14,13 +16,13 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-
 const container = document.getElementById('root');
 const root = createRoot(container); 
 
-
 root.render(
-  <StripeProvider>
-    <App />
-  </StripeProvider>
+  <Provider store={store}>
+    <StripeProvider>
+      <App />
+    </StripeProvider>
+  </Provider>
 );
