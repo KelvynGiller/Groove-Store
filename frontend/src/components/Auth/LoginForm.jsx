@@ -12,27 +12,35 @@ const LoginForm = () => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-
+  
+      const idToken = await user.getIdToken();
+  
+      console.log("User ID received:", user.uid);
+  
       const response = await fetch("http://localhost:3000/cart/create-or-get", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${idToken}`,
+        },
         body: JSON.stringify({ user_id: user.uid }),
       });
-
+  
       const data = await response.json();
+  
       if (response.ok) {
-
         localStorage.setItem("cart_id", data.cart_id);
         alert("Login successful!");
         navigate("/dashboard");
       } else {
-        alert("Error creating/retrieving cart.");
+        alert("Error creating/retrieving cart: " + data.message);
+        console.error("Error creating/retrieving cart:", data);
       }
     } catch (error) {
       alert("Error during login. Please check your credentials.");
       console.error("Login error:", error);
     }
-  };
+  };  
 
   const handleGoogleLogin = async () => {
     const auth = getAuth();
@@ -41,25 +49,33 @@ const LoginForm = () => {
       const userCredential = await signInWithPopup(auth, provider);
       const user = userCredential.user;
   
+      const idToken = await user.getIdToken();
+
       const response = await fetch("http://localhost:3000/cart/create-or-get", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${idToken}`,
+        },
+        
         body: JSON.stringify({ user_id: user.uid }),
       });
-  
       const data = await response.json();
+  
       if (response.ok) {
         localStorage.setItem("cart_id", data.cart_id);
         alert("Google login successful!");
         navigate("/dashboard");
       } else {
-        alert("Error creating/retrieving cart.");
+        alert("Error creating/retrieving cart: " + data.message);
+        console.error("Error creating/retrieving cart:", data);
       }
     } catch (error) {
       alert("Error during Google login.");
       console.error("Google login error:", error);
     }
   };
+
   return (
     <div className="flex justify-center items-center min-h-screen bg-[#16161A]">
       <div className="w-[400px] bg-[#242629] p-8 rounded-2xl shadow-lg text-center">
@@ -81,9 +97,10 @@ const LoginForm = () => {
           className="w-full p-3 mb-6 bg-[#16161A] text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7F5AF0]"
         />
 
-        <button 
-          onClick={handleLogin} 
-          className="w-full bg-[#7F5AF0] text-white py-3 rounded-lg font-bold hover:bg-[#6842c2] transition">
+        <button
+          onClick={handleLogin}
+          className="w-full bg-[#7F5AF0] text-white py-3 rounded-lg font-bold hover:bg-[#6842c2] transition"
+        >
           Log In
         </button>
 
@@ -93,14 +110,15 @@ const LoginForm = () => {
           <div className="flex-grow border-t border-gray-500"></div>
         </div>
 
-        <button 
-          onClick={handleGoogleLogin} 
-          className="w-full flex items-center justify-center gap-3 bg-white text-black py-3 rounded-lg font-bold hover:bg-gray-200 transition">
+        <button
+          onClick={handleGoogleLogin}
+          className="w-full flex items-center justify-center gap-3 bg-white text-black py-3 rounded-lg font-bold hover:bg-gray-200 transition"
+        >
           Log In with Google
         </button>
 
         <p className="mt-4 text-gray-400">
-          Don't have an account? <Link className="text-gray-200" to='/register'>Register here</Link>
+          Don't have an account? <Link className="text-gray-200" to="/register">Register here</Link>
         </p>
       </div>
     </div>
