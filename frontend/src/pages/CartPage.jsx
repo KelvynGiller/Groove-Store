@@ -1,12 +1,11 @@
 import React from "react";
 import Header from "../components/Header";
-import Cart from "../components/Cart";
 import Footer from "../components/Footer";
-import { useCart } from "../context/CartContext";
+import Cart from "../components/Cart";
+import { useSelector } from "react-redux";
 
 const CartPage = () => {
-  const { cart } = useCart();
-
+  const cart = useSelector((state) => state.cart.items || []);
   return (
     <div>
       <Header />
