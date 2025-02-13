@@ -8,28 +8,23 @@ import ProductDetailPage from './pages/ProductDetailPage';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import Dashboard from './pages/DashboardPage';
-import { CartProvider } from "./context/CartContext";
 
 
 const AppRoutes = () => {
-    return (
-      <CartProvider>  
-        <Router>
-            <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/register" element={<RegisterPage />} />
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/products" element={<ProductListPage />} />
-                <Route path="/product/:id" element={<ProductDetailPage />} />
-                <Route path="/cart" element={<CartPage />} />
-               
-                <Route path="/checkout" element={<CheckoutPage />} />
-                
-            </Routes>
-        </Router>
-      </CartProvider>
-    )
-}
+  return (
+      <Router>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/products" element={<ProductListPage />} />
+          <Route path="/product/:id" element={<ProductDetailPage />} />
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
+        </Routes>
+      </Router>
+  );
+};
 
 export default AppRoutes;
