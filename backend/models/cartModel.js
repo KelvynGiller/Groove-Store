@@ -1,7 +1,6 @@
 const pool = require('../config/db');
 
 const Cart = {
-    
     createCart: async (user_id) => {
         const result = await pool.query(
             'INSERT INTO carts (user_id) VALUES ($1) RETURNING *',
@@ -12,12 +11,11 @@ const Cart = {
 
     findByUserId: async (user_id) => {
         const result = await pool.query(
-          'SELECT * FROM carts WHERE user_id = $1',
-          [user_id]
+            'SELECT * FROM carts WHERE user_id = $1',
+            [user_id]
         );
         return result.rows[0];
-      },
-    
+    },
 
     findById: async (cart_id) => {
         const result = await pool.query(
@@ -26,9 +24,16 @@ const Cart = {
         );
         return result.rows[0];
     },
-    
+
+    checkUserExists: async (user_id) => {
+        const result = await pool.query(
+            'SELECT 1 FROM users WHERE id = $1',
+            [user_id]
+        );
+        return result.rows.length > 0;
+    },
+
     addProduct: async (cart_id, product_id, quantity, price) => {
-        
         const result = await pool.query(
             'INSERT INTO cart_items (cart_id, product_id, quantity, price) VALUES ($1, $2, $3, $4) RETURNING *',
             [cart_id, product_id, quantity, price]
@@ -57,23 +62,27 @@ const Cart = {
             'SELECT price FROM products WHERE id = $1',
             [product_id]
         );
-    
         if (result.rows.length === 0) {
             throw new Error('Product not found');
         }
-    
         return result.rows[0].price;
     },
 
     getItems: async (cart_id) => {
         const result = await pool.query(
-            'SELECT ci.product_id, ci.quantity, p.name, p.price ' +
-            'FROM cart_items ci ' +
-            'JOIN products p ON ci.product_id = p.id ' +
-            'WHERE ci.cart_id = $1', 
+            `SELECT 
+               ci.product_id, 
+               ci.quantity, 
+               p.name, 
+               p.price, 
+               p.category AS genre, 
+               p.artist 
+             FROM cart_items ci 
+             JOIN products p ON ci.product_id = p.id 
+             WHERE ci.cart_id = $1`, 
             [cart_id]
         );
-
+    
         return result.rows;
     },
 };
