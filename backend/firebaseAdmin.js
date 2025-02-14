@@ -9,13 +9,10 @@ admin.initializeApp({
 const verifyToken = async (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
 
-  console.log("Received token:", token);
-
   if (!token) return res.status(401).json({ message: "Token not found" });
 
   try {
     const decodedToken = await admin.auth().verifyIdToken(token);
-    console.log("Decoded token:", decodedToken); 
     req.user = decodedToken; 
     next(); 
   } catch (error) {
