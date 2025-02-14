@@ -12,7 +12,10 @@ const Cart = () => {
   const [currentUser, setCurrentUser] = useState(undefined);
   const [token, setToken] = useState(null);
 
-  const { items, totalAmount, status, error } = useSelector((state) => state.cart);
+  const cart_id = useSelector((state) => state.cart.cart_id);
+  const items = useSelector((state) => state.cart.items);
+  const totalAmount = useSelector((state) => state.cart.totalAmount);
+  const { status, error } = useSelector((state) => state.cart);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -38,8 +41,6 @@ const Cart = () => {
         .catch((err) => {
           console.error('Failed to fetch cart:', err);
         });
-    } else {
-      console.log('Current user and token:', currentUser, token);
     }
   }, [dispatch, currentUser, token, items.length]);
 
@@ -59,15 +60,31 @@ const Cart = () => {
   };
 
   const handleProceedToCheckout = async () => {
+    if (!cart_id) {
+      console.error("Cart not fount!");
+      return;
+    }
     try {
-      const response = await axios.post('http://localhost:3000/orders', {
-        userId: currentUser.id,
-        items: items,
+      const orderResponse = await axios.post("http://localhost:3000/orders", {
+        user_id: currentUser.uid,
+        cart_id: cart_id,
+        total_price: totalAmount,
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
       });
-      const { orderId } = response.data;
+      const { id: orderId } = orderResponse.data;
+      await axios.post(`http://localhost:3000/orders/${orderId}/items`, {
+        items: items.map(item => ({
+          productId: item.product_id,
+          quantity: item.quantity,
+          price: item.price,
+        })),
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       navigate(`/checkout/${orderId}`);
     } catch (error) {
-      console.error('Error to create order:', error);
+      console.error("Error", error);
     }
   };
 
@@ -80,9 +97,10 @@ const Cart = () => {
   }
 
   if (status === 'failed') {
-    const errorMessage = error?.message || error;
-    return <div className="text-red-500 p-8">Error: {errorMessage}</div>;
+    const errorMessage = typeof error === 'object' ? error.message : error;
+    return <div className="text-red-500 p-8">Erro: {errorMessage}</div>;
   }
+
   return (
     <div className="bg-[#16161A] min-h-screen p-8">
       <h1 className="text-white text-3xl font-bold mb-8">Your Cart</h1>
@@ -91,29 +109,29 @@ const Cart = () => {
       ) : (
         <>
           <ul className="space-y-4">
-              {items.map((item) => (
-                 <li
-                      key={item.product_id}
-                      className="bg-[#242629] p-4 rounded-lg flex justify-between items-center"
-                    >
-                      <div>
-                        <h2 className="text-white text-xl font-semibold">{item.name}</h2>
-                        <p className="text-gray-400">Artist: {item.artist}</p>
-                        <p className="text-gray-400">Genre: {item.genre}</p>
-                        <p className="text-[#7F5AF0]">
-                          ${(item.price * item.quantity).toFixed(2)}
-                        </p>
-                        <p className="text-gray-400">Quantity: {item.quantity}</p>
-                      </div>
-                      <button
-                        onClick={() => handleRemoveFromCart(item.product_id)}
-                        className="bg-red-500 text-white p-2 rounded-md hover:bg-red-600 transition"
-                      >
-                        Remove
-                      </button>
-                    </li>
-                  ))}
-            </ul>
+            {items.map((item) => (
+              <li
+                key={item.product_id}
+                className="bg-[#242629] p-4 rounded-lg flex justify-between items-center"
+              >
+                <div>
+                  <h2 className="text-white text-xl font-semibold">{item.name}</h2>
+                  <p className="text-gray-400">Artist: {item.artist}</p>
+                  <p className="text-gray-400">Genre: {item.genre}</p>
+                  <p className="text-[#7F5AF0]">
+                    ${(item.price * item.quantity).toFixed(2)}
+                  </p>
+                  <p className="text-gray-400">Quantity: {item.quantity}</p>
+                </div>
+                <button
+                  onClick={() => handleRemoveFromCart(item.product_id)}
+                  className="bg-red-500 text-white p-2 rounded-md hover:bg-red-600 transition"
+                >
+                  Remove
+                </button>
+              </li>
+            ))}
+          </ul>
           <div className="mt-8 text-right">
             <h2 className="text-white text-2xl font-bold">
               Total: ${totalAmount.toFixed(2)}
