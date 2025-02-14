@@ -13,55 +13,49 @@ const fetchOrCreateCart = async (userId, token) => {
 };
 
 export const fetchCart = createAsyncThunk(
-    'cart/fetchCart',
-    async ({ userId, token }, { rejectWithValue }) => {
-      try {
-        const cartId = await fetchOrCreateCart(userId, token);
-        const response = await axios.get(`${API_URL}/${cartId}/items`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        return response.data;
-      } catch (error) {
-        console.error("fetchCart error:", error);
-        const errMsg =
-          error.response && error.response.data
-            ? error.response.data.message || JSON.stringify(error.response.data)
-            : error.message;
-        return rejectWithValue(errMsg);
-      }
+  'cart/fetchCart',
+  async ({ userId, token }, { rejectWithValue }) => {
+    try {
+      const cartId = await fetchOrCreateCart(userId, token);
+      const response = await axios.get(`${API_URL}/${cartId}/items`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return { cart_id: cartId, items: response.data.items };
+    } catch (error) {
+      console.error("fetchCart error:", error);
+      const errMsg =
+        error.response && error.response.data
+          ? error.response.data.message || JSON.stringify(error.response.data)
+          : error.message;
+      return rejectWithValue(errMsg);
     }
-  );
-  
+  }
+);
+
 export const addToCart = createAsyncThunk(
-    'cart/addToCart',
-    async ({ userId, product_id, name, price, quantity, token }, { rejectWithValue }) => {
-      try {
-        console.log('Adding to cart with price:', price, 'and quantity:', quantity);
-  
-        if (isNaN(price) || price <= 0) return rejectWithValue('Invalid product price');
-        if (isNaN(quantity) || quantity <= 0) quantity = 1;
-  
-        const cartId = await fetchOrCreateCart(userId, token);
-  
-        const response = await axios.post(
-          `${API_URL}/${cartId}/add-product`,
-          { product_id, name, price, quantity },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-  
-        console.log('Response from adding product to cart:', response.data);
-  
-        if (!response.data || !response.data.product) {
-          return rejectWithValue('Failed to add product to cart');
-        }
-  
-        return response.data.product;
-      } catch (error) {
-        console.error('Error adding product to cart:', error);
-        return rejectWithValue(error.response?.data || error.message);
+  'cart/addToCart',
+  async ({ userId, product_id, name, price, quantity, token }, { rejectWithValue }) => {
+    try {
+      console.log('Adding to cart with price:', price, 'and quantity:', quantity);
+      if (isNaN(price) || price <= 0) return rejectWithValue('Invalid product price');
+      if (isNaN(quantity) || quantity <= 0) quantity = 1;
+      const cartId = await fetchOrCreateCart(userId, token);
+      const response = await axios.post(
+        `${API_URL}/${cartId}/add-product`,
+        { product_id, name, price, quantity },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      console.log('Response from adding product to cart:', response.data);
+      if (!response.data || !response.data.product) {
+        return rejectWithValue('Failed to add product to cart');
       }
+      return response.data.product;
+    } catch (error) {
+      console.error('Error adding product to cart:', error);
+      return rejectWithValue(error.response?.data || error.message);
     }
-  );
+  }
+);
 
 export const removeFromCart = createAsyncThunk(
   'cart/removeFromCart',
@@ -95,6 +89,7 @@ export const clearCart = createAsyncThunk(
 );
 
 const initialState = {
+  cart_id: null,
   items: [],
   totalAmount: 0,
   status: 'idle',
@@ -120,6 +115,7 @@ const cartSlice = createSlice({
       })
       .addCase(fetchCart.fulfilled, (state, action) => {
         state.status = 'succeeded';
+        state.cart_id = action.payload.cart_id;
         state.items = action.payload.items || [];
         state.totalAmount = calculateTotal(action.payload.items || []);
       })
@@ -127,7 +123,6 @@ const cartSlice = createSlice({
         state.status = 'failed';
         state.error = action.payload;
       })
-
       .addCase(addToCart.pending, (state) => {
         state.status = 'loading';
       })
