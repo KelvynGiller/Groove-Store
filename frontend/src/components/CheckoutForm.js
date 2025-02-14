@@ -1,79 +1,71 @@
-import React, { useState, useEffect } from "react";
-import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { processPayment } from "../slices/CheckoutSlice";
+import { useNavigate } from "react-router-dom";
 
-const CheckoutForm = ({ orderId, amount }) => {
-  const stripe = useStripe();
-  const elements = useElements();
+const CheckoutForm = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [cardNumber, setCardNumber] = useState("");
+  const [expiry, setExpiry] = useState("");
+  const [cvc, setCvc] = useState("");
   const [loading, setLoading] = useState(false);
-  const [clientSecret, setClientSecret] = useState("");
-  const [message, setMessage] = useState("");
 
-  useEffect(() => {
-    const fetchPaymentIntent = async () => {
-      try {
-        const response = await fetch("http://localhost:3000/orders/create-payment-intent", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            amount: amount * 100,
-            currency: "usd",
-            order_id: orderId,
-          }),
-        });
-
-        const data = await response.json();
-        setClientSecret(data.clientSecret);
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    };
-
-    if (amount > 0) {
-      fetchPaymentIntent();
-    }
-  }, [amount, orderId]);
-
-  const handleSubmit = async (e) => {
+  const handlePayment = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setMessage("");
-
-    if (!stripe || !elements || !clientSecret) {
-      setLoading(false);
+    if (!cardNumber || !expiry || !cvc) {
+      alert("Please fill in all fields.");
       return;
     }
-
-    const cardElement = elements.getElement(CardElement);
     
-    const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
-      payment_method: {
-        card: cardElement,
-      },
-    });
-
-    if (error) {
-      setMessage(error.message);
+    setLoading(true);
+    try {
+      await dispatch(processPayment({
+        orderId: "any_orderId", 
+        amount: 1000,          
+        paymentInfo: { cardNumber, expiry, cvc }
+      })).unwrap();
+      alert("Payment successful!");
+      navigate("/success");
+    } catch (err) {
+      alert("Payment failed. Please try again.");
+    } finally {
       setLoading(false);
-    } else if (paymentIntent.status === "succeeded") {
-      setMessage("Pagamento bem-sucedido!");
     }
-
-    setLoading(false);
   };
-
   return (
-    <form onSubmit={handleSubmit} className="p-4 bg-gray-800 rounded-md">
-      <CardElement className="p-3 bg-white rounded-md" />
-      <button
-        type="submit"
-        disabled={!stripe || loading || !clientSecret}
-        className="mt-4 w-full bg-[#7F5AF0] text-white p-3 rounded-md hover:bg-[#6A47D5] transition"
-      >
-        {loading ? "Processing..." : "Pay Now"}
-      </button>
-      {message && <p className="mt-2 text-white">{message}</p>}
+    <form onSubmit={handlePayment} className="bg-[#242629] p-6 rounded-lg">
+      <h2 className="text-white text-xl font-bold mb-4">Payment Details</h2>
+      <div className="space-y-4">
+        <input
+          type="text"
+          value={cardNumber}
+          onChange={(e) => setCardNumber(e.target.value)}
+          className="w-full bg-[#16161A] text-white p-2 rounded-md"
+          placeholder="Card Number"
+        />
+        <input
+          type="text"
+          value={expiry}
+          onChange={(e) => setExpiry(e.target.value)}
+          className="w-full bg-[#16161A] text-white p-2 rounded-md"
+          placeholder="MM/YY"
+        />
+        <input
+          type="text"
+          value={cvc}
+          onChange={(e) => setCvc(e.target.value)}
+          className="w-full bg-[#16161A] text-white p-2 rounded-md"
+          placeholder="CVC"
+        />
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-[#7F5AF0] text-white p-3 rounded-md hover:bg-[#6A47D5] transition"
+        >
+          {loading ? "Processing..." : "Pay Now"}
+        </button>
+      </div>
     </form>
   );
 };
