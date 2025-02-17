@@ -3,9 +3,11 @@ import axios from "axios";
 import Header from "../components/Header";
 import ProductList from "../components/ProductList";
 import Footer from "../components/Footer";
+import AudioPlayer from "../components/AudioPlayer";
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
+  const [currentSong, setCurrentSong] = useState({ songName: "", artistName: "" });
 
   useEffect(() => {
     axios
@@ -14,11 +16,19 @@ const ProductsPage = () => {
       .catch((error) => console.error("Error fetching products:", error));
   }, []);
 
+  const handlePlay = (songName, artistName) => {
+    setCurrentSong({ songName, artistName });
+  };
+
   return (
-    <div>
+    <div className="relative min-h-screen pb-24">
       <Header />
-      <ProductList products={products} showAll={true} />
+      <ProductList products={products} showAll={true} onPlay={handlePlay} />
       <Footer />
+      <AudioPlayer
+        songName={currentSong.songName}
+        artistName={currentSong.artistName}
+      />
     </div>
   );
 };
