@@ -7,7 +7,8 @@ const authRoutes = require('./routes/authRoutes');
 const cartRoutes = require('./routes/cartRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const swaggerDocs = require('./config/swaggerConfig');
-const verifyToken = require("./firebaseAdmin");  
+const verifyToken = require("./firebaseAdmin"); 
+const checkoutRoutes = require('./routes/checkoutRoutes'); 
 
 dotenv.config();
 
@@ -23,11 +24,14 @@ app.use(cors(corsOptions));
 
 app.use(express.json());
 
+app.use(express.urlencoded({ extended: true })); 
+
 app.use('/products', productRoutes);
 app.use('/users', userRoutes);
 app.use('/auth', authRoutes); 
 app.use('/cart', cartRoutes);
 app.use('/orders', orderRoutes);
+app.use('/api/checkout', checkoutRoutes);
 
 
 swaggerDocs(app);
