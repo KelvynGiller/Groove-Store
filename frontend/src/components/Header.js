@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
-import { FiShoppingCart } from "react-icons/fi";
+import { FiShoppingCart, FiUser } from "react-icons/fi";
 import { useSelector } from "react-redux";
 
 const Header = () => {
@@ -20,14 +20,25 @@ const Header = () => {
         Groove Store
       </h1>
       <nav className="flex space-x-6">
-        <Link to="/" className="text-white text-[14px] font-[Golos Text]">Home</Link>
-        <Link to="/products" className="text-white text-[14px] font-[Golos Text]">Tracks</Link>
-        <Link to="/genres" className="text-white text-[14px] font-[Golos Text]">Genres</Link>
-        <Link to="/artists" className="text-white text-[14px] font-[Golos Text]">Artists</Link>
+        <Link to="/" className="text-white text-[14px] font-[Golos Text]">
+          Home
+        </Link>
+        <Link to="/products" className="text-white text-[14px] font-[Golos Text]">
+          Tracks
+        </Link>
+        <Link to="/genres" className="text-white text-[14px] font-[Golos Text]">
+          Genres
+        </Link>
+        <Link to="/artists" className="text-white text-[14px] font-[Golos Text]">
+          Artists
+        </Link>
       </nav>
       <div className="flex items-center space-x-6">
         {user ? (
           <>
+            <Link to="/orderhistory" className="relative text-white text-[14px] font-[Golos Text]">
+              <FiUser size={24} />
+            </Link>
             <Link to="/cart" className="relative text-white text-[14px] font-[Golos Text]">
               <FiShoppingCart size={24} />
               {cart.length > 0 && (
@@ -36,20 +47,26 @@ const Header = () => {
                 </span>
               )}
             </Link>
-            <button onClick={() => signOut(getAuth())} className="text-white text-[18px] font-[Goldman]">
+            <button
+              onClick={() => signOut(getAuth())}
+              className="text-white text-[18px] font-[Goldman]"
+            >
               Logout
             </button>
           </>
         ) : (
           <>
-            <Link to="/login" className="text-white text-[18px] font-[Goldman]">Login</Link>
-            <Link to="/register" className="text-white text-[18px] font-[Goldman]">Register</Link>
+            <Link to="/login" className="text-white text-[18px] font-[Goldman]">
+              Login
+            </Link>
+            <Link to="/register" className="text-white text-[18px] font-[Goldman]">
+              Register
+            </Link>
           </>
         )}
       </div>
     </header>
   );
 };
-
 
 export default Header;
