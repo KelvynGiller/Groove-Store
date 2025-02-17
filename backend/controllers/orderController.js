@@ -9,19 +9,19 @@ exports.addOrderItems = async (req, res) => {
   const { items } = req.body;
 
   if (!items || items.length === 0) {
-    return res.status(400).json({ error: error.message });
+    return res.status(400).json({ error: "No items provided" });
   }
 
   try {
     const orderExists = await Order.getById(orderId);
 
     if (!orderExists) {
-      return res.status(404).json({ error: "Order not find." });
+      return res.status(404).json({ error: "Order not found." });
     }
     const orderItems = await Order.addOrderItems(orderId, items);
     
     if (!orderItems || orderItems.length === 0) {
-      return res.status(500).json({ error: error.message });
+      return res.status(500).json({ error: "Error adding order items." });
     }
     res.status(201).json(orderItems);
   } catch (error) {
@@ -84,14 +84,11 @@ exports.getOrderById = async (req, res) => {
     if (!order) {
       return res.status(404).json({ error: "Order not found." });
     }    
-    const orderItems = await Order.getOrderItems(orderId);
-    order.items = orderItems;
     res.json(order);
   } catch (error) {
     res.status(500).json({ error: "Error" });
   }
 };
-
 
 exports.updateOrderStatus = async (req, res) => {
   try {
