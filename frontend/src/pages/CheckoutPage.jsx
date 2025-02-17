@@ -42,16 +42,16 @@ const CheckoutPage = () => {
   }, [dispatch, orderId, token]);
 
   if (status === 'loading') {
-    return <div className="text-white p-8">Loading order details...</div>;
+    return <div className="text-white p-8">Loading...</div>;
   }
-  
+
   if (status === 'failed') {
     const errorMessage = typeof error === 'object' ? error.message : error;
-    return <div className="text-red-500 p-8">Error: {errorMessage}</div>;
+    return <div className="text-red-500 p-8">Erro: {errorMessage}</div>;
   }
-  
-  if (!order) {
-    return <div className="text-gray-400 p-8">Order details unavailable.</div>;
+
+  if (!order || !order.id || !order.total_price) {
+    return <div className="text-gray-400 p-8">Loading...</div>;
   }
 
   return (
@@ -71,13 +71,14 @@ const CheckoutPage = () => {
                 </li>
               ))
             ) : (
-              <li className="text-gray-400">Items not found.</li>
+              <li className="text-gray-400">Cart is empty</li>
             )}
           </ul>
           <div className="mt-4 text-white text-lg font-bold">
             Total: ${parseFloat(order.total_price || 0).toFixed(2)}
           </div>
-          <CheckoutForm />
+          
+          <CheckoutForm orderId={order.id} amount={order.total_price} />
         </div>
       </main>
       <Footer />
