@@ -3,11 +3,13 @@ import axios from "axios";
 import Header from "../components/Header";
 import ProductList from "../components/ProductList";
 import Footer from "../components/Footer";
+import AudioPlayer from "../components/AudioPlayer";
 
 const GenresPage = () => {
   const [products, setProducts] = useState([]);
   const [genres, setGenres] = useState([]);
   const [selectedGenre, setSelectedGenre] = useState("All");
+  const [currentSong, setCurrentSong] = useState({ songName: "", artistName: "" });
 
   useEffect(() => {
     axios
@@ -24,6 +26,11 @@ const GenresPage = () => {
   const filteredProducts = selectedGenre === "All"
     ? products
     : products.filter(product => product.category === selectedGenre);
+
+    const handlePlay = (songName, artistName) => {
+        setCurrentSong({ songName, artistName });
+      };
+    
 
   return (
     <div>
@@ -45,10 +52,14 @@ const GenresPage = () => {
         </aside>
 
         <main className="w-3/4">
-          <ProductList products={filteredProducts} showAll={true} />
+          <ProductList products={filteredProducts} showAll={true} onPlay={handlePlay} />
         </main>
       </div>
       <Footer />
+      <AudioPlayer
+        songName={currentSong.songName}
+        artistName={currentSong.artistName}
+      />
     </div>
   );
 };

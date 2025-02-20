@@ -3,11 +3,13 @@ import axios from "axios";
 import Header from "../components/Header";
 import ProductList from "../components/ProductList";
 import Footer from "../components/Footer";
+import AudioPlayer from "../components/AudioPlayer";
 
 const ArtistsPage = () => {
   const [products, setProducts] = useState([]);
   const [artists, setArtists] = useState([]);
   const [selectedArtist, setSelectedArtist] = useState("All");
+  const [currentSong, setCurrentSong] = useState({ songName: "", artistName: "" });
 
   useEffect(() => {
     axios
@@ -15,23 +17,24 @@ const ArtistsPage = () => {
       .then((response) => {
         const prods = response.data;
         setProducts(prods);
-        // Cria uma lista única de artistas e adiciona a opção "All"
         const uniqueArtists = ["All", ...new Set(prods.map(product => product.artist))];
         setArtists(uniqueArtists);
       })
       .catch((error) => console.error("Error fetching products:", error));
   }, []);
 
-  // Se "All" estiver selecionado, mostra todos os produtos; caso contrário, filtra por artista
   const filteredProducts = selectedArtist === "All"
     ? products
     : products.filter(product => product.artist === selectedArtist);
+
+    const handlePlay = (songName, artistName) => {
+        setCurrentSong({ songName, artistName });
+      };
 
   return (
     <div>
       <Header />
       <div className="flex bg-[#16161A]">
-        {/* Sidebar de filtro */}
         <aside className="w-1/8 p-6 text-white border-r border-gray-700">
           <h3 className="text-xl font-bold mb-4">Filter by Artist</h3>
           <ul>
@@ -47,12 +50,15 @@ const ArtistsPage = () => {
           </ul>
         </aside>
 
-        {/* Área principal com os produtos filtrados */}
         <main className="w-3/4">
-          <ProductList products={filteredProducts} showAll={true} />
+          <ProductList products={filteredProducts} showAll={true} onPlay={handlePlay} />
         </main>
       </div>
       <Footer />
+      <AudioPlayer
+        songName={currentSong.songName}
+        artistName={currentSong.artistName}
+      />
     </div>
   );
 };

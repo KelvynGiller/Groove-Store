@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import CoverImage from "./CoverImage"; // Certifique-se de que o caminho esteja correto
+import CoverImage from "./CoverImage";
 
 const ProductList = ({ products, showAll = false, onPlay }) => {
   const displayedProducts = showAll ? products : products.slice(0, 8);
