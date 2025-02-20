@@ -9,22 +9,22 @@ const AudioPlayer = ({ songName, artistName }) => {
   const [duration, setDuration] = useState(0);
   const [songUrl, setSongUrl] = useState("");
 
-  const getPreviewUrl = async () => {
-    if (!songName || !artistName) return;
-    try {
-      const response = await axios.get(
-        `https://itunes.apple.com/search?term=${songName}+${artistName}&entity=song&limit=1`
-      );
-      const url = response.data.results[0]?.previewUrl;
-      if (url) {
-        setSongUrl(url);
-      }
-    } catch (error) {
-      console.error("Error fetching preview URL:", error);
-    }
-  };
-
   useEffect(() => {
+    const getPreviewUrl = async () => {
+      if (!songName || !artistName) return;
+      try {
+        const response = await axios.get(
+          `https://itunes.apple.com/search?term=${songName}+${artistName}&entity=song&limit=1`
+        );
+        const url = response.data.results[0]?.previewUrl;
+        if (url) {
+          setSongUrl(url);
+        }
+      } catch (error) {
+        console.error("Error fetching preview URL:", error);
+      }
+    };
+  
     getPreviewUrl();
   }, [songName, artistName]);
 
@@ -58,7 +58,7 @@ const AudioPlayer = ({ songName, artistName }) => {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 w-full bg-[#242629] p-4 flex flex-col md:flex-row items-center">
+    <div className="fixed bottom-0 left-0 h-28 w-full bg-[#242629] p-4 flex flex-col md:flex-row items-center">
       {songUrl ? (
         <>
           <audio ref={audioRef} src={songUrl} preload="auto" />
