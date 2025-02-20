@@ -1,7 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/cart';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
+const API_URL = `${API_BASE_URL}/cart`;
 
 const fetchOrCreateCart = async (userId, token) => {
   const response = await axios.post(

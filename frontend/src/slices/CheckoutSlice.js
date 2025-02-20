@@ -1,11 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 export const fetchOrderDetails = createAsyncThunk(
   "checkout/fetchOrderDetails",
   async ({ orderId, token }, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`http://localhost:3000/orders/details/${orderId}`, {
+      const response = await axios.get(`${API_BASE_URL}/orders/details/${orderId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       return response.data;
@@ -20,7 +22,7 @@ export const processPayment = createAsyncThunk(
   "checkout/processPayment",
   async ({ orderId, amount, paymentInfo }, { rejectWithValue }) => {
     try {
-      const response = await axios.post("http://localhost:3000/orders/create-payment-intent", {
+      const response = await axios.post(`${API_BASE_URL}/orders/create-payment-intent`, {
         order_id: orderId,
         amount,
         paymentInfo,
