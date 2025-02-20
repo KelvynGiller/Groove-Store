@@ -5,6 +5,8 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { Link } from "react-router-dom";
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 const Dashboard = () => {
   const [message, setMessage] = useState("");
   const [user, setUser] = useState(null);
@@ -14,7 +16,7 @@ const Dashboard = () => {
       if (currentUser) {
         setUser(currentUser);
         const token = await getIdToken(currentUser);
-        const response = await fetch("http://localhost:3000/api/protected", {
+        const response = await fetch(`${API_BASE_URL}/api/protected`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

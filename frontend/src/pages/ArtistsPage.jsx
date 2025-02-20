@@ -5,6 +5,8 @@ import ProductList from "../components/ProductList";
 import Footer from "../components/Footer";
 import AudioPlayer from "../components/AudioPlayer";
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 const ArtistsPage = () => {
   const [products, setProducts] = useState([]);
   const [artists, setArtists] = useState([]);
@@ -13,7 +15,7 @@ const ArtistsPage = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/products")
+      .get(`${API_BASE_URL}/products`)
       .then((response) => {
         const prods = response.data;
         setProducts(prods);

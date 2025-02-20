@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
 import { useNavigate } from "react-router-dom";
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 const CheckoutForm = ({ orderId, amount }) => {
   const stripe = useStripe();
   const elements = useElements();
@@ -17,7 +19,7 @@ const CheckoutForm = ({ orderId, amount }) => {
     const amountInCents = Math.round(parseFloat(amount) * 100);
   
     try {
-      const response = await fetch("http://localhost:3000/api/checkout/payment", {
+      const response = await fetch(`${API_BASE_URL}/api/checkout/payment`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ orderId, amount: amountInCents }),

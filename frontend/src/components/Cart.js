@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import axios from 'axios';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 const Cart = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -65,7 +67,7 @@ const Cart = () => {
       return;
     }
     try {
-      const orderResponse = await axios.post("http://localhost:3000/orders", {
+      const orderResponse = await axios.post(`${API_BASE_URL}/orders`, {
         user_id: currentUser.uid,
         cart_id: cart_id,
         total_price: totalAmount,
@@ -73,7 +75,7 @@ const Cart = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
       const { id: orderId } = orderResponse.data;
-      await axios.post(`http://localhost:3000/orders/${orderId}/items`, {
+      await axios.post(`${API_BASE_URL}/orders/${orderId}/items`, {
         items: items.map(item => ({
           productId: item.product_id,
           quantity: item.quantity,

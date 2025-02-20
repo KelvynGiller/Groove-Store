@@ -5,6 +5,8 @@ import ProductDetail from '../components/ProductDetail';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 const ProductDetailPage = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
@@ -14,7 +16,7 @@ const ProductDetailPage = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/products/${id}`);
+        const response = await axios.get(`${API_BASE_URL}/products/${id}`);
         setProduct(response.data);
       } catch (error) {
         setError('Failed to load product details');
