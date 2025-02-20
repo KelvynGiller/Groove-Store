@@ -1,9 +1,9 @@
 const admin = require("firebase-admin");
 
-const serviceAccount = require("./groove-store-firebase-adminsdk-fbsvc-cb18b69ca5.json");
+const firebaseConfig = JSON.parse(process.env.FIREBASE_CREDENTIALS);
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
+  credential: admin.credential.cert(firebaseConfig),
 });
 
 const verifyToken = async (req, res, next) => {
